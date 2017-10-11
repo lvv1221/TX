@@ -21,11 +21,11 @@
         <div class="singlebox">
           <ul class="singleword">
             <li v-for="item in words" :key="item.index" :class="[class1[item.index%4],
-                {'singleorange-current': item.index%4 === 0 && curStatu[item.index]},
-                {'singleblue-current': item.index%4 === 1 && curStatu[item.index]},
-                {'singlered-current': item.index%4 === 2 && curStatu[item.index]},
-                {'singlegreen-current': item.index%4 === 3 && curStatu[item.index]}]"
-                @click="start(item.index)" v-if="showStatu[item.index]"><!--请注意桔色选中状态class名为singleorange-current-->
+                {'singleorange-current': item.index%4 === 0 && item.current},
+                {'singleblue-current': item.index%4 === 1 && item.current},
+                {'singlered-current': item.index%4 === 2 && item.current},
+                {'singlegreen-current': item.index%4 === 3 && item.current}]"
+                @click="start(item.index)" v-if="item.show"><!--请注意桔色选中状态class名为singleorange-current-->
               <div class="serial-number">单词{{item.index+1}}</div>
               <div class="soundmark">[ i:zi ]{{item.word}}</div>
               <div class="transmit"><i :class="transmit"></i></div>
@@ -68,7 +68,7 @@
             <li v-for="item in emptyLi"></li>
           </ul>
           <div class="singlepage">
-            <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page(index)"><i></i></button>
+            <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page(index+1)"><i></i></button>
            <!-- <button class="singlepage-noraml"><i></i></button>
             <button class="singlepage-noraml"><i></i></button>
             <button class="singlepage-current"><i></i></button>-->
@@ -127,14 +127,14 @@
       }
     },
     created () {
-      let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd']
+      let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd']
       this.pageCount = Math.ceil(word.length/6)
      // console.log(this.pageCount)
       for (let i=0;i<word.length;i++) {
         this.words.push({index:i, word:word[i], current:false, show:i<6?true:false})
       }
-      console.log(JSON.stringify(this.words))
-      for(let i = 0; i<this.words.length; i++) {
+     // console.log(JSON.stringify(this.words))
+      /*for(let i = 0; i<this.words.length; i++) {
         this.curStatu.push(false)
         if (i<6) {
           this.showStatu.push(true)
@@ -142,7 +142,7 @@
         else {
           this.showStatu.push(false)
         }
-      }
+      }*/
      // console.log(this.curStatu)
     },
     methods: {
@@ -156,28 +156,73 @@
       },
       start (index) {
         // 获取点击单词板的颜色
+       // console.log('index:'+index + '...NUM:' + this.wordNum)
         let color = this.chooseColor(event.target.parentNode.classList)
         this.ballColor.push(color)
         // 上个单词板消失
         if(this.wordNum !== '' && this.wordNum !== index) {
-          this.showStatu[this.wordNum] = false
-          this.$nextTick(() => {
-            this.drop(event.target)
-          })
-          this.addWord()
+          for(let w of this.words) {
+            if(w.index === this.wordNum) {
+              w.show=false
+              // 移除被点击单词
+              let n = this.words.findIndex((word) => {
+                return word === w
+              })
+             // console.log(n)
+              this.words.splice(n,1)
+              // 执行飞出动画
+              this.$nextTick(() => {
+                this.drop(event.target)
+              })
+              // 添加单词
+              this.addWord(index)
+            }
+          }
         }
+
         this.transmit = 'transmit-play'
-        this.curStatu[index]=true
+        for(let w of this.words) {
+          if(w.index === index)
+            w.current=true
+        }
         this.play()
         this.wordNum = index
       },
-      addWord () {
-        if(6+this.i > this.words.length-1) {
+      // 获取当前页面显示单词数
+      countShow () {
+        let showCount = 0
+        for (let w of this.words) {
+          if (w.show === true) {
+            showCount++
+          }
+        }
+        return showCount
+      },
+      addWord (m) {
+        // 找下一个单词显示出来
+        if ( this.countShow() < 6) {
+          for (let w of this.words) {
+            if (w.index > m && w.show === false) {
+              w.show = true
+              return
+            }
+            // this.emptyLi.push('')
+          }
+        }
+        // 填充占位li
+        let showCount = this.countShow()
+        if (this.countShow()<6) {
+          for (let i = 0; i<6-showCount-this.emptyLi.length; i++) {
+            this.emptyLi.push('')
+          }
+        }
+       /* console.log(JSON.stringify(this.words))
+        if(5+this.i > this.words.length-1 || this.words[5+this.i].index<this.words[this.i].index) {
               this.emptyLi.push('')
         } else {
-          this.showStatu[6+this.i] = true
+          this.words[5+this.i].show = true
         }
-        this.i++
+        this.i++*/
        // console.log(this.emptyLi.length)
       },
       /*start2 () {
@@ -262,27 +307,74 @@
           el.style.display = 'none'
         }
       },
-      page (num) {
-        let tempWords = this.words.splice(num*6,6)
-       // console.log(JSON.stringify(tempWords))
-        for (let a of tempWords) {
-          console.log(a.index)
-          this.showStatu[a.index] = true
-          for(let i = 0; i<6;i++) {
-            this.showStatu[this.words[i].index] =false
+      page (page) {
+      //  console.log(page)
+        if (page !== this.pageNum) {
+          let num = page - this.pageNum
+         // console.log(num)
+          // 下一页
+          if (num > 0) {
+            // 选取目标页单词
+            let tempWords = this.words.slice(num*6,num*6+6)
+            // console.log(JSON.stringify(tempWords))
+            // 目标页单词（不含之前上一页翻过去的）显示
+            for (let i = 0; i<tempWords.length;i++) {
+              // console.log(tempWords[i].index + '...' + tempWords[0].index)
+              if (tempWords[i].index >= tempWords[0].index) {
+               tempWords[i].show = true
+              }
+            }
+            //当前页单词隐藏
+            for(let i = 0; i<6;i++) {
+              this.words[i].show =false
+            }
+            // 是否增加占位标签li
+            let showCount = 0
+            for (let w of this.words) {
+              if (w.show === true) {
+                showCount++
+              }
+            }
+          //  console.log(showCount)
+            if (tempWords.length<6) {
+              // console.log(6-tempWords.length)
+              for(let i=0;i<(6-tempWords.length);i++) {
+                this.emptyLi.push('')
+              }
+            } else if (showCount<6) {
+              for (let i = 0; i<6-showCount; i++) {
+                this.emptyLi.push('')
+              }
+            }
+            // 翻过页的单词添加到队尾
+           // console.log(JSON.stringify(this.words.length))
+            let preWords = this.words.splice(0,num*6)
+            this.words.push(...preWords)
+           // console.log(JSON.stringify(this.words))
+          } else
+            // 上一页
+            {
+            // console.log(JSON.stringify(this.words))
+            // 选取目标页单词
+            let tempWords = this.words.splice((this.words.length+num*6),-(6*num))
+            // console.log(JSON.stringify(tempWords))
+            // 目标页单词显示
+            for (let i = 0; i<6; i++) {
+              tempWords[i].show = true
+            }
+            // 剩余单词隐藏
+            for (let obj of this.words) {
+              obj.show = false
+            }
+            // 清楚占位标签li (因为补充原理，故上一页单词必为6)
+           this.emptyLi = []
+            // 目标页单词添加到队首
+            this.words.unshift(...tempWords)
+           // console.log(JSON.stringify(this.words))
           }
+
+          this.pageNum = page
         }
-        if (tempWords.length<6) {
-          console.log(6-tempWords.length)
-          for(let i=0;i<(6-tempWords.length);i++) {
-            this.emptyLi.push('')
-          }
-        }
-          this.words.splice(0,0,...tempWords)
-          let arr =_.cloneDeep(this.words)
-          this.words = arr
-          console.log(JSON.stringify(this.words))
-         // this.words = arr
       },
       toAnswer () {
         this.$router.push({name: 'answerList'})
