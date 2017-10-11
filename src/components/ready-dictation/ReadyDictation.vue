@@ -68,7 +68,7 @@
             <li v-for="item in emptyLi"></li>
           </ul>
           <div class="singlepage">
-            <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page(index+1)"><i></i></button>
+            <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page1(index+1)"><i></i></button>
            <!-- <button class="singlepage-noraml"><i></i></button>
             <button class="singlepage-noraml"><i></i></button>
             <button class="singlepage-current"><i></i></button>-->
@@ -123,6 +123,7 @@
         dropBalls: [],
         ballColor: [],
         pageCount:'',
+        fyFlag: false,
         pageNum: 1
       }
     },
@@ -163,6 +164,10 @@
         if(this.wordNum !== '' && this.wordNum !== index) {
           for(let w of this.words) {
             if(w.index === this.wordNum) {
+              if (w.show === false && w.index < index) {
+                this.fyFlag = true
+               // console.log(this.fyFlag)
+              }
               w.show=false
               // 移除被点击单词
               let n = this.words.findIndex((word) => {
@@ -170,6 +175,7 @@
               })
              // console.log(n)
               this.words.splice(n,1)
+              this.pageCount = Math.ceil(this.words.length/6)
               // 执行飞出动画
               this.$nextTick(() => {
                 this.drop(event.target)
@@ -199,6 +205,18 @@
         return showCount
       },
       addWord (m) {
+        if (this.fyFlag === true) {
+          for (let w of this.words) {
+            if (w.show === true) {
+              w.show = false
+              this.fyFlag =false
+              /*为旧版翻页添加*/
+              /*let word = this.words.shift()
+              this.words.push(word)*/
+              break
+            }
+          }
+        }
         // 找下一个单词显示出来
         if ( this.countShow() < 6) {
           for (let w of this.words) {
@@ -225,16 +243,6 @@
         this.i++*/
        // console.log(this.emptyLi.length)
       },
-      /*start2 () {
-        console.log(this.wordNum)
-        if(this.wordNum !== '') {
-          this.isOver[this.wordNum] = true
-        }
-        this.transmit = 'transmit-play'
-        this.isCur2=true
-        this.play()
-        this.wordNum = 2
-      },*/
       play () {
         if (!this.startDic) {
           this.startDic = true
@@ -307,6 +315,26 @@
           el.style.display = 'none'
         }
       },
+      page1(page) {
+        if (page !== this.pageNum) {
+          for (let i = 0; i < this.words.length; i++) {
+            if (i >= (page-1)*6 && i < page*6) {
+              this.words[i].show = true
+            } else {
+              this.words[i].show = false
+            }
+          }
+          let showCount = this.countShow()
+          if (showCount<6) {
+            for (let i = 0; i<6-showCount; i++) {
+              this.emptyLi.push('')
+            }
+          } else {
+            this.emptyLi = []
+          }
+          this.pageNum = page
+        }
+      },
       page (page) {
       //  console.log(page)
         if (page !== this.pageNum) {
@@ -329,12 +357,7 @@
               this.words[i].show =false
             }
             // 是否增加占位标签li
-            let showCount = 0
-            for (let w of this.words) {
-              if (w.show === true) {
-                showCount++
-              }
-            }
+            let showCount = this.countShow()
           //  console.log(showCount)
             if (tempWords.length<6) {
               // console.log(6-tempWords.length)
@@ -361,7 +384,9 @@
             // 目标页单词显示
             for (let i = 0; i<6; i++) {
               tempWords[i].show = true
+             // console.log(JSON.stringify(tempWords[i]))
             }
+            //  console.log(JSON.stringify(tempWords))
             // 剩余单词隐藏
             for (let obj of this.words) {
               obj.show = false
