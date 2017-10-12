@@ -365,6 +365,7 @@
       },
       toAnswer () {
         this.costTime = this.$refs.timeTool.stopTime()
+        this.$store.dispatch('setWords', this.readWords)
         this.$router.push({name: 'answerList', params: {time: this.costTime}})
       },
       openBasket () {

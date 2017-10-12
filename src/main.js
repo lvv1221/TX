@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import utils from './utils'
 import './assets/css/main.css'
 import './assets/css/common/fonts/iconfont.css'
@@ -17,6 +18,7 @@ Vue.prototype.UTILS = utils
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   render: h => h(App),
   components: { App }
