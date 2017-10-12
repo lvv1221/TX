@@ -5,45 +5,23 @@
         <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
         <div class="fullpop-content">
           <div class="fullpop-top">
-            <strong>听写单词答案</strong>
+            <strong>已报单词篮</strong>
           </div>
           <div class="singlebox">
             <ul class="singleword">
-              <li class="singleorange"><!--请注意桔色选中状态class名为singleorange-current-->
-                <div>
-                  <div class="serial-number">单词1</div>
-                  <div class="soundmark">[ i:zi ]</div>
-                  <div class="transmit"><i class="transmit-normal"></i></div>
-                </div>
+              <li v-for="item in readwords" :key="item.index" :class="[colorclass[item.index%4],
+                {'singleorange-current': item.index%4 === 0 && item.current},
+                {'singleblue-current': item.index%4 === 1 && item.current},
+                {'singlered-current': item.index%4 === 2 && item.current},
+                {'singlegreen-current': item.index%4 === 3 && item.current}]"
+                  v-if="item.show"  ><!--请注意桔色选中状态class名为singleorange-current-->
+                <div class="serial-number">单词{{item.index+1}}</div>
+                <div class="soundmark">[ i:zi ]{{item.word}}</div>
               </li>
-              <li class="singleblue"><!--请注意蓝色选中状态class名为singleblue-current-->
-                <div class="serial-number">单词2</div>
-                <div class="soundmark">[ dendrs ]</div>
-                <div class="transmit"><i class="transmit-normal"></i></div>
-              </li>
-              <li class="singlered  singlered-current"><!--请注意红色选中状态class名为singlered-current-->
-                <div class="serial-number">单词3</div>
-                <div class="soundmark">[ hæpi ]</div>
-                <div class="transmit"><i class="transmit-normal"></i></div>
-              </li>
-              <li class="singlered  singlered-current"><!--请注意红色选中状态class名为singlered-current-->
-                <div class="serial-number">单词4</div>
-                <div class="soundmark">[ mst ]</div>
-                <div class="transmit"><i class="transmit-play"></i></div><!--请注意transmit中i标签的名称,默认状态为transmit-normal，当播放的过程中名称变为transmit-play-->
-              </li>
-              <li class="singlegreen"><!--请注意绿色选中状态class名为singlegreen-current-->
-                <div class="serial-number">单词5</div>
-                <div class="soundmark">[ ju:sfl ]</div>
-                <div class="transmit"><i class="transmit-normal"></i></div>
-              </li>
-              <li>
-              </li>
+              <li v-for="item in emptyLi"></li>
             </ul>
             <div class="singlepage">
-              <button class="singlepage-noraml"><i></i></button>
-              <button class="singlepage-noraml"><i></i></button>
-              <button class="singlepage-noraml"><i></i></button>
-              <button class="singlepage-current"><i></i></button>
+              <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page(index+1)"><i></i></button>
             </div>
           </div>
           <div class="fullpop-btnbar"><button class="btn-blue" @click="goBack">返回</button></div>
@@ -56,16 +34,58 @@
 <script>
   export default {
     name:'basket',
+    props: ['readwords', 'colorclass'],
     data () {
       return {
-        showFlag: false
+        showFlag: false,
+        pageCount: '',
+        pageNum: 1,
+        emptyLi: []
       }
+    },
+    updated () {
+      if (this.readwords.length < 7 ) {
+        for (let i = 0;i < this.readwords.length; i++) {
+          this.readwords[i].show = true
+        }
+      }
+      this.pageCount = Math.ceil(this.readwords.length/6)
     },
     methods: {
       show () {
         this.showFlag = !this.showFlag
       },
+        /*countShow () {
+          let showCount = 0
+          for (let w of this.readwords) {
+            if (w.show === true) {
+              showCount++
+            }
+          }
+          return showCount
+        },*/
+      page(page) {
+        if (page !== this.pageNum) {
+          for (let i = 0; i < this.readwords.length; i++) {
+            if (i >= (page-1)*6 && i < page*6) {
+              this.readwords[i].show = true
+            } else {
+              this.readwords[i].show = false
+            }
+          }
+          let showCount = this.UTILS.countShow(this.readwords)
+          if (showCount<6) {
+            for (let i = 0; i<6-showCount; i++) {
+              this.emptyLi.push('')
+            }
+          } else {
+            this.emptyLi = []
+          }
+          this.pageNum = page
+        }
+      },
       goBack () {
+        console.log(JSON.stringify(this.readwords))
         this.showFlag = !this.showFlag
       }
     }

@@ -5,7 +5,7 @@
       <div class="fullpop-content">
         <div class="fullpop-top">
           <strong>听写单词答案</strong>
-          <p class="fullpop-topys"><i class="icon iconfont">&#xe650;</i>共用时&nbsp;<b>03:21</b></p>
+          <p class="fullpop-topys"><i class="icon iconfont">&#xe650;</i>共用时&nbsp;<b>{{costTime}}</b></p>
         </div>
         <div class="singlebox pa30">
           <div class="single-refresh"><button class="btn-empty"><i class="icon iconfont">&#xe645;</i></button></div>
@@ -95,8 +95,12 @@
     name: 'answerList',
     data () {
       return {
-        js: ''
+        js: '',
+        costTime: ''
       }
+    },
+    created () {
+      this.costTime = this.$route.params.time
     },
     methods: {
       goDetails () {

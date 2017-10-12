@@ -5,7 +5,7 @@
       <div class="fullpop-content">
         <div class="fullpop-top">
           <timetool ref="timeTool"></timetool>
-          <p v-show="startDic"><button class="btn-gray" @click="openBasket" ref="bascket">已报单词篮<span class="red">（0）</span></button></p>
+          <p v-show="startDic"><button class="btn-gray" @click="openBasket" ref="bascket">已报单词篮<span class="red">（{{readCount}}）</span></button></p>
 
           <div class="ball-container">
             <div v-for="ball in balls">
@@ -33,7 +33,7 @@
             <li v-for="item in emptyLi"></li>
           </ul>
           <div class="singlepage">
-            <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page1(index+1)"><i></i></button>
+            <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page(index+1)"><i></i></button>
           </div>
         </div>
         <div class="fullpop-reminders2" v-if="!startDic" >请点选单词开始听写</div>
@@ -41,7 +41,7 @@
 
       </div>
     </div>
-    <basket ref="basket"></basket>
+    <basket ref="basket" :readwords="readWords" :colorclass="class1"></basket>
   </div>
 
 
@@ -57,11 +57,11 @@
     data () {
       return {
         words: [],
+        readWords: [],
+        readCount: 0,
+        showBasket: false,
         class1: ['singleorange','singleblue','singlered','singlegreen'],
-        class2: ['singleorange-current','singleblue-current','singlered-current','singlegreen-current'],
-        curStatu: [],
-        showStatu: [],
-        i: 0,
+       // class2: ['singleorange-current','singleblue-current','singlered-current','singlegreen-current'],
         emptyLi: [],
         startDic: false,
         transmit: 'transmit-normal',
@@ -78,6 +78,7 @@
           show: false
         }],
         dropBalls: [],
+        rect: {},
         ballColor: [],
         pageCount:'',
         fyFlag: false,
@@ -89,11 +90,9 @@
     created () {
       let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd']
       this.pageCount = Math.ceil(word.length/6)
-     // console.log(this.pageCount)
       for (let i=0;i<word.length;i++) {
         this.words.push({index:i, word:word[i], current:false, show:i<6?true:false})
       }
-     // console.log(JSON.stringify(this.words))
       /*for(let i = 0; i<this.words.length; i++) {
         this.curStatu.push(false)
         if (i<6) {
@@ -103,7 +102,6 @@
           this.showStatu.push(false)
         }
       }*/
-     // console.log(this.curStatu)
     },
     methods: {
       show () {
@@ -115,7 +113,6 @@
       },
       dragOver(event) {
         let length = this.dragX - event.clientX
-       // console.log(length + '...' + this.dragX)
         if (length > 20) {
           if (this.pageNum > 1) {
             this.page(this.pageNum-1)
@@ -129,9 +126,10 @@
       },
       start (index) {
         // 开始计时器
-        this.$refs.timeTool.startTime()
+        if(this.wordNum === '') {
+          this.$refs.timeTool.startTime()
+        }
         // 获取点击单词板的颜色
-       // console.log('index:'+index + '...NUM:' + this.wordNum)
         let color = this.chooseColor(event.target.parentNode.classList)
         this.ballColor.push(color)
         // 上个单词板消失
@@ -140,14 +138,17 @@
             if(w.index === this.wordNum) {
               if (w.show === false && w.index < index) {
                 this.fyFlag = true
-               // console.log(this.fyFlag)
               }
               w.show=false
+              //添加到已读单词组
+              this.readWords.push(w)
+              this.readCount++
+             // console.log(JSON.stringify(this.readWords))
               // 移除被点击单词
-              let n = this.words.findIndex((word) => {
+             /* let n = this.words.findIndex((word) => {
                 return word === w
-              })
-             // console.log(n)
+              })*/
+              let n = this.UTILS.findIndex(w,this.words)
               this.words.splice(n,1)
               this.pageCount = Math.ceil(this.words.length/6)
               // 执行飞出动画
@@ -169,7 +170,7 @@
         this.wordNum = index
       },
       // 获取当前页面显示单词数
-      countShow () {
+      /*countShow () {
         let showCount = 0
         for (let w of this.words) {
           if (w.show === true) {
@@ -177,7 +178,7 @@
           }
         }
         return showCount
-      },
+      },*/
       addWord (m) {
         if (this.fyFlag === true) {
           for (let w of this.words) {
@@ -192,18 +193,17 @@
           }
         }
         // 找下一个单词显示出来
-        if ( this.countShow() < 6) {
+        if ( this.UTILS.countShow(this.words) < 6) {
           for (let w of this.words) {
             if (w.index > m && w.show === false) {
               w.show = true
               return
             }
-            // this.emptyLi.push('')
           }
         }
         // 填充占位li
-        let showCount = this.countShow()
-        if (this.countShow()<6) {
+        let showCount = this.UTILS.countShow(this.words)
+        if (this.UTILS.countShow(this.words) <6) {
           for (let i = 0; i<6-showCount-this.emptyLi.length; i++) {
             this.emptyLi.push('')
           }
@@ -215,7 +215,6 @@
           this.words[5+this.i].show = true
         }
         this.i++*/
-       // console.log(this.emptyLi.length)
       },
       play () {
         if (!this.startDic) {
@@ -243,9 +242,11 @@
         while (count--) {
           let ball = this.balls[count]
           if (ball.show) {
-            let rect = ball.el.getBoundingClientRect()
-            let x =- (window.innerWidth - rect.right -127)
-            let y = rect.top - 123
+            if (ball.el.getBoundingClientRect().left !==0) {
+              this.rect = ball.el.getBoundingClientRect()
+            }
+            let x =- (window.innerWidth - this.rect.right -127)
+            let y = this.rect.top - 123
             el.style.display = ''
             el.style.webkitTransform = `translate3d(0,${y}px,0)`
             el.style.transform = `translate3d(0,${y}px,0)`
@@ -289,7 +290,7 @@
           el.style.display = 'none'
         }
       },
-      page1(page) {
+      page(page) {
         if (page !== this.pageNum) {
           for (let i = 0; i < this.words.length; i++) {
             if (i >= (page-1)*6 && i < page*6) {
@@ -298,7 +299,7 @@
               this.words[i].show = false
             }
           }
-          let showCount = this.countShow()
+          let showCount = this.UTILS.countShow(this.words)
           if (showCount<6) {
             for (let i = 0; i<6-showCount; i++) {
               this.emptyLi.push('')
@@ -309,19 +310,15 @@
           this.pageNum = page
         }
       },
-      page (page) {
-      //  console.log(page)
+      page1 (page) {
         if (page !== this.pageNum) {
           let num = page - this.pageNum
-         // console.log(num)
           // 下一页
           if (num > 0) {
             // 选取目标页单词
             let tempWords = this.words.slice(num*6,num*6+6)
-            // console.log(JSON.stringify(tempWords))
             // 目标页单词（不含之前上一页翻过去的）显示
             for (let i = 0; i<tempWords.length;i++) {
-              // console.log(tempWords[i].index + '...' + tempWords[0].index)
               if (tempWords[i].index >= tempWords[0].index) {
                tempWords[i].show = true
               }
@@ -331,10 +328,8 @@
               this.words[i].show =false
             }
             // 是否增加占位标签li
-            let showCount = this.countShow()
-          //  console.log(showCount)
+            let showCount = this.UTILS.countShow(this.words)
             if (tempWords.length<6) {
-              // console.log(6-tempWords.length)
               for(let i=0;i<(6-tempWords.length);i++) {
                 this.emptyLi.push('')
               }
@@ -344,23 +339,17 @@
               }
             }
             // 翻过页的单词添加到队尾
-           // console.log(JSON.stringify(this.words.length))
             let preWords = this.words.splice(0,num*6)
             this.words.push(...preWords)
-           // console.log(JSON.stringify(this.words))
           } else
             // 上一页
             {
-            // console.log(JSON.stringify(this.words))
             // 选取目标页单词
             let tempWords = this.words.splice((this.words.length+num*6),-(6*num))
-            // console.log(JSON.stringify(tempWords))
             // 目标页单词显示
             for (let i = 0; i<6; i++) {
               tempWords[i].show = true
-             // console.log(JSON.stringify(tempWords[i]))
             }
-            //  console.log(JSON.stringify(tempWords))
             // 剩余单词隐藏
             for (let obj of this.words) {
               obj.show = false
@@ -369,7 +358,6 @@
            this.emptyLi = []
             // 目标页单词添加到队首
             this.words.unshift(...tempWords)
-           // console.log(JSON.stringify(this.words))
           }
 
           this.pageNum = page
@@ -377,8 +365,7 @@
       },
       toAnswer () {
         this.costTime = this.$refs.timeTool.stopTime()
-       // console.log(this.costTime)
-        this.$router.push({name: 'answerList'})
+        this.$router.push({name: 'answerList', params: {time: this.costTime}})
       },
       openBasket () {
         this.$refs.basket.show()
@@ -395,13 +382,6 @@
 <style>
   .fullpop-reminders2 {
     height: 178px;
-  }
-  .list-enter-active, .list-leave-active {
-    transition: all 0.3s linear;
-  }
-  .list-enter, .list-leave-to {
-    opacity: 0;
-    transform: translate3d(calc(500%),-160px,100px) scale(0.1,0.1);
   }
   .ball {
     position: fixed;
