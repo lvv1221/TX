@@ -24,7 +24,7 @@
 	color:#fff;
 }
 .fullpop-tab p a{
-	display:block;
+	display:inline-block;
 	width:58px;
 	height:58px;
 	line-height:50px;
@@ -125,7 +125,7 @@
 	-webkit-margin-start: 0px;
 	-webkit-margin-end: 0px;
 	-webkit-box-flex: 1.0;
-	padding:3% 6% 2%;
+	padding:4% 6% 1%;
 	margin:0;
 	display: flex;
 	flex-direction:row;

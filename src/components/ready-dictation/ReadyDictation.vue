@@ -1,10 +1,10 @@
 <template>
   <div class="wrap">
     <div class="fullpop-box">
-      <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
+      <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
       <div class="fullpop-content">
         <div class="fullpop-top">
-          <button class="pop-state"><i class="icon iconfont">&#xe650;</i>未开始</button>
+          <timetool ref="timeTool"></timetool>
           <p v-show="startDic"><button class="btn-gray" @click="openBasket" ref="bascket">已报单词篮<span class="red">（0）</span></button></p>
 
           <div class="ball-container">
@@ -18,7 +18,7 @@
           </div>
 
         </div>
-        <div class="singlebox">
+        <div class="singlebox" draggable="true" @dragstart="dragStart($event)" @dragend="dragOver($event)">
           <ul class="singleword">
             <li v-for="item in words" :key="item.index" :class="[class1[item.index%4],
                 {'singleorange-current': item.index%4 === 0 && item.current},
@@ -30,48 +30,10 @@
               <div class="soundmark">[ i:zi ]{{item.word}}</div>
               <div class="transmit"><i :class="transmit"></i></div>
             </li>
-         <!--   <transition name="list"> {'singleorange-current': curStatu[index]}
-            <li class="singleblue"  :class="{'singleblue-current': isCur2}" @click="start2" v-if="!isOver[2]">&lt;!&ndash;请注意蓝色选中状态class名为singleblue-current&ndash;&gt;
-              <div class="serial-number">单词2</div>
-              <div class="soundmark">[ dendrs ]</div>
-              <div class="transmit"><i :class="transmit"></i></div>
-            </li>
-            </transition>
-            <transition name="list">
-            <li class="singlered" :class="{'singlered-current': isCur3}" @click="start3" v-if="!isOver[3]">&lt;!&ndash;请注意红色选中状态class名为singlered-current&ndash;&gt;
-              <div class="serial-number">单词3</div>
-              <div class="soundmark">[ hæpi ]</div>
-              <div class="transmit"><i :class="transmit"></i></div>
-            </li>
-            </transition>
-            <li class="singlered" :class="{'singlered-current': isCur4}" @click="start4" v-if="!isOver[4]">&lt;!&ndash;请注意红色选中状态class名为singlered-current&ndash;&gt;
-              <div class="serial-number">单词4</div>
-              <div class="soundmark">[ mst ]</div>
-              <div class="transmit"><i :class="transmit"></i></div>&lt;!&ndash;请注意transmit中i标签的名称,默认状态为transmit-normal，当播放的过程中名称变为transmit-play&ndash;&gt;
-            </li>
-            <li class="singlegreen" :class="{'singlegreen-current': isCur5}" @click="start5" v-if="!isOver[5]">&lt;!&ndash;请注意绿色选中状态class名为singlegreen-current&ndash;&gt;
-              <div class="serial-number">单词5</div>
-              <div class="soundmark">[ ju:sfl ]</div>
-              <div class="transmit"><i :class="transmit"></i></div>
-            </li>
-            <li class="singleorange" :class="{'singleorange-current': isCur6}" @click="start6" v-if="!isOver[6]">&lt;!&ndash;请注意桔色选中状态class名为singleorange-current&ndash;&gt;
-              <div class="serial-number">单词6</div>
-              <div class="soundmark">[ ju:sfl ]</div>
-              <div class="transmit"><i :class="transmit"></i></div>
-            </li>
-            <li v-if="isOver[1]"></li>
-            <li v-if="isOver[2]"></li>
-            <li v-if="isOver[3]"></li>
-            <li v-if="isOver[4]"></li>
-            <li v-if="isOver[5]"></li>
-            <li v-if="isOver[6]"></li>-->
             <li v-for="item in emptyLi"></li>
           </ul>
           <div class="singlepage">
             <button :class="index+1===pageNum?'singlepage-current':'singlepage-noraml'" v-for="(item,index) in pageCount" @click="page1(index+1)"><i></i></button>
-           <!-- <button class="singlepage-noraml"><i></i></button>
-            <button class="singlepage-noraml"><i></i></button>
-            <button class="singlepage-current"><i></i></button>-->
           </div>
         </div>
         <div class="fullpop-reminders2" v-if="!startDic" >请点选单词开始听写</div>
@@ -88,6 +50,7 @@
 <script>
   import anspro from '../doing-dictation/AnswerProgress.vue'
   import basket from '../word-basket/WordBasket.vue'
+  import timetool from './TimeTool.vue'
   import _ from 'lodash'
   export default {
     name:'ready-diraction',
@@ -101,12 +64,6 @@
         i: 0,
         emptyLi: [],
         startDic: false,
-/*        isCur1: false,
-        isCur2: false,
-        isCur3: false,
-        isCur4: false,
-        isCur5: false,
-        isCur6: false,*/
         transmit: 'transmit-normal',
         wordNum: '',
         balls: [{
@@ -124,7 +81,9 @@
         ballColor: [],
         pageCount:'',
         fyFlag: false,
-        pageNum: 1
+        pageNum: 1,
+        dragX: '',
+        costTime: ''
       }
     },
     created () {
@@ -151,11 +110,26 @@
         this.$refs.hello.show()
         console.log(this.$refs.hello.flag)
       },
-      test() {
-        this.f1()
-        console.log(123)
+      dragStart (event) {
+        this.dragX = event.clientX
+      },
+      dragOver(event) {
+        let length = this.dragX - event.clientX
+       // console.log(length + '...' + this.dragX)
+        if (length > 20) {
+          if (this.pageNum > 1) {
+            this.page(this.pageNum-1)
+          }
+        }
+        else if (length < -20) {
+          if (this.pageNum < this.pageCount) {
+            this.page(this.pageNum+1)
+          }
+        }
       },
       start (index) {
+        // 开始计时器
+        this.$refs.timeTool.startTime()
         // 获取点击单词板的颜色
        // console.log('index:'+index + '...NUM:' + this.wordNum)
         let color = this.chooseColor(event.target.parentNode.classList)
@@ -402,6 +376,8 @@
         }
       },
       toAnswer () {
+        this.costTime = this.$refs.timeTool.stopTime()
+       // console.log(this.costTime)
         this.$router.push({name: 'answerList'})
       },
       openBasket () {
@@ -410,7 +386,8 @@
     },
     components: {
       anspro,
-      basket
+      basket,
+      timetool
     }
   }
 </script>
