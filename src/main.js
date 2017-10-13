@@ -8,11 +8,13 @@ import utils from './utils'
 import './assets/css/main.css'
 import './assets/css/common/fonts/iconfont.css'
 import {test} from './utils/test'
+import config from './assets/config/env-config.json'
 
 Vue.config.productionTip = false
 
 Vue.use(test)
 Vue.prototype.UTILS = utils
+Vue.prototype.CONFIG = config
 
 /* eslint-disable no-new */
 new Vue({

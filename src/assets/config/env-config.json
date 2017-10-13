@@ -1,0 +1,12 @@
+{
+  "baseUrl": {
+    "words": "http://",
+    "students": "http://",
+    "upload": "http://",
+    "downLoad": "http://"
+  },
+  "page": {
+    "defaultPageSize": 6,
+    "defaultPageSizeList": [6, 12, 18, 24]
+  }
+}
