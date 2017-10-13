@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 const store = {
   state: {
-    readWords: []
+    readWords: [],
+    costTime: ''
   },
   getters: {
     getLength: state => {
@@ -18,6 +19,9 @@ const store = {
     },
     setWords (state, words) {
       state.readWords = words
+    },
+    setTime (state, time) {
+      state.costTime = time
     }
   },
   actions: {
@@ -26,6 +30,9 @@ const store = {
     },
     setWords ({commit}, words) {
       commit('setWords',words)
+    },
+    setTime ({commit}, time) {
+      commit('setTime', time)
     }
   },
   // 严格模式

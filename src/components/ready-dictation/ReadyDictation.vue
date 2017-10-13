@@ -88,7 +88,7 @@
       }
     },
     created () {
-      let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd']
+      let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd','16swe']
       this.pageCount = Math.ceil(word.length/6)
       for (let i=0;i<word.length;i++) {
         this.words.push({index:i, word:word[i], current:false, show:i<6?true:false})
@@ -365,8 +365,10 @@
       },
       toAnswer () {
         this.costTime = this.$refs.timeTool.stopTime()
+        this.$store.dispatch('setTime', this.costTime)
         this.$store.dispatch('setWords', this.readWords)
-        this.$router.push({name: 'answerList', params: {time: this.costTime}})
+       // this.$store.dispatch('setWords', this.words)
+        this.$router.push({name: 'answerList'})
       },
       openBasket () {
         this.$refs.basket.show()

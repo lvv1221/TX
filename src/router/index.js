@@ -14,7 +14,7 @@ export default new Router({
       component: Ready
     },
     {
-      path:'/answerList/:time',
+      path:'/answerList',
       name: 'answerList',
       component: answerList
     },

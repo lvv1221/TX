@@ -2,7 +2,8 @@
   <div class="basket" v-show="showFlag">
     <div class="wrap">
       <div class="fullpop-box">
-        <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
+        <!--<div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>-->
+        <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
         <div class="fullpop-content">
           <div class="fullpop-top">
             <strong>已报单词篮</strong>
