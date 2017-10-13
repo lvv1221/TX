@@ -62,7 +62,7 @@
         showBasket: false,
         class1: ['singleorange','singleblue','singlered','singlegreen'],
        // class2: ['singleorange-current','singleblue-current','singlered-current','singlegreen-current'],
-        emptyLi: [],
+       // emptyLi: [],
         startDic: false,
         transmit: 'transmit-normal',
         wordNum: '',
@@ -103,11 +103,19 @@
         }
       }*/
     },
+    computed: {
+      emptyLi: function () {
+        let arr = []
+        let showCount = this.UTILS.countShow(this.words)
+        if (showCount<6) {
+          for (let i = 0; i<6-showCount; i++) {
+            arr.push('')
+          }
+        }
+        return arr
+      }
+    },
     methods: {
-      show () {
-        this.$refs.hello.show()
-        console.log(this.$refs.hello.flag)
-      },
       dragStart (event) {
         this.dragX = event.clientX
       },
@@ -201,13 +209,13 @@
             }
           }
         }
-        // 填充占位li
+        /*// 填充占位li
         let showCount = this.UTILS.countShow(this.words)
         if (this.UTILS.countShow(this.words) <6) {
           for (let i = 0; i<6-showCount-this.emptyLi.length; i++) {
             this.emptyLi.push('')
           }
-        }
+        }*/
        /* console.log(JSON.stringify(this.words))
         if(5+this.i > this.words.length-1 || this.words[5+this.i].index<this.words[this.i].index) {
               this.emptyLi.push('')
@@ -299,14 +307,14 @@
               this.words[i].show = false
             }
           }
-          let showCount = this.UTILS.countShow(this.words)
+          /*let showCount = this.UTILS.countShow(this.words)
           if (showCount<6) {
             for (let i = 0; i<6-showCount; i++) {
               this.emptyLi.push('')
             }
           } else {
             this.emptyLi = []
-          }
+          }*/
           this.pageNum = page
         }
       },

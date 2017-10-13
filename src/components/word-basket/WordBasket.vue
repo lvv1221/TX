@@ -40,11 +40,11 @@
       return {
         showFlag: false,
         pageCount: '',
-        pageNum: 1,
-        emptyLi: []
+        pageNum: 1
+      //  emptyLi: []
       }
     },
-    updated () {
+    beforeUpdate () {
       if (this.readwords.length < 7 ) {
         for (let i = 0;i < this.readwords.length; i++) {
           this.readwords[i].show = true
@@ -52,8 +52,22 @@
       }
       this.pageCount = Math.ceil(this.readwords.length/6)
     },
+    computed: {
+      emptyLi: function () {
+        let arr = []
+        let showCount = this.UTILS.countShow(this.readwords)
+        if (showCount<6) {
+          for (let i = 0; i<6-showCount; i++) {
+            arr.push('')
+          }
+        }
+        return arr
+      }
+    },
     methods: {
       show () {
+       // console.log(this.readwords.length)
+        this.restShow(this.pageNum)
         this.showFlag = !this.showFlag
       },
         /*countShow () {
@@ -65,28 +79,38 @@
           }
           return showCount
         },*/
+      restShow (page) {
+        for (let i = 0; i < this.readwords.length; i++) {
+          if (i >= (page-1)*6 && i < page*6) {
+            this.readwords[i].show = true
+          } else {
+            this.readwords[i].show = false
+          }
+        }
+      },
       page(page) {
         if (page !== this.pageNum) {
-          for (let i = 0; i < this.readwords.length; i++) {
+          /*for (let i = 0; i < this.readwords.length; i++) {
             if (i >= (page-1)*6 && i < page*6) {
               this.readwords[i].show = true
             } else {
               this.readwords[i].show = false
             }
-          }
-          let showCount = this.UTILS.countShow(this.readwords)
+          }*/
+          this.restShow(page)
+          /*let showCount = this.UTILS.countShow(this.readwords)
           if (showCount<6) {
             for (let i = 0; i<6-showCount; i++) {
               this.emptyLi.push('')
             }
           } else {
             this.emptyLi = []
-          }
+          }*/
           this.pageNum = page
         }
       },
       goBack () {
-        console.log(JSON.stringify(this.readwords))
+       // console.log(JSON.stringify(this.readwords))
         this.showFlag = !this.showFlag
       }
     }

@@ -16,11 +16,11 @@
             <table class="singletable">
               <tr>
                 <th width="20%" v-for="word in rowWord(item)">单词{{word.index+1}}</th>
-                <th v-for="b in blank"></th>
+                <th v-for="b in blank" style="border: none" v-if="item === rowNum"></th>
               </tr>
               <tr>
                 <td v-for="word in rowWord(item)"><span :class="{'red': word.correct<60?true:false}">{{word.word}}</span></td>
-                <td v-for="b in blank"></td>
+                <td v-for="b in blank" style="border: none" v-if="item === rowNum"></td>
               </tr>
             </table>
           </div>
@@ -40,7 +40,6 @@
     data () {
       return {
         words: [],
-        blank: [],
         costTime: '',
         loading: false
       }
@@ -58,11 +57,19 @@
     },
     computed: {
       rowNum: function () {
-        let num = Math.ceil(this.words.length/5)
-        for (let i=0; i < 5 - num; i++) {
-          this.blank.push('')
+        return Math.ceil(this.words.length/5)
+      },
+      blank: function () {
+        let arr = []
+        let num = this.words.length % 5
+        if (num > 0) {
+          for (let i=0; i < 5 - num; i++) {
+            arr.push('')
+          }
+        } else {
+          arr = []
         }
-        return num
+        return arr
       }
     },
     methods: {
