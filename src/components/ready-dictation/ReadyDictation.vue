@@ -78,8 +78,10 @@
           show: false
         }],
         dropBalls: [],
-        rect: {},
+       // rect: {},
+        rect1: [],
         ballColor: [],
+        target: '',
         pageCount:'',
         fyFlag: false,
         pageNum: 1,
@@ -122,13 +124,13 @@
       dragOver(event) {
         let length = this.dragX - event.clientX
         if (length > 20) {
-          if (this.pageNum > 1) {
-            this.page(this.pageNum-1)
+          if (this.pageNum < this.pageCount) {
+            this.page(this.pageNum+1)
           }
         }
         else if (length < -20) {
-          if (this.pageNum < this.pageCount) {
-            this.page(this.pageNum+1)
+          if (this.pageNum > 1) {
+            this.page(this.pageNum-1)
           }
         }
       },
@@ -167,6 +169,9 @@
               this.addWord(index)
             }
           }
+        }
+        if (this.rect1.length === 0) {
+          this.rect1.push(event.target.getBoundingClientRect())
         }
 
         this.transmit = 'transmit-play'
@@ -250,11 +255,13 @@
         while (count--) {
           let ball = this.balls[count]
           if (ball.show) {
-            if (ball.el.getBoundingClientRect().left !==0) {
+            /*if (ball.el.getBoundingClientRect().left !==0) {
               this.rect = ball.el.getBoundingClientRect()
-            }
-            let x =- (window.innerWidth - this.rect.right -127)
-            let y = this.rect.top - 123
+            }*/
+            this.rect1.push(event.target.getBoundingClientRect())
+            let x =- (window.innerWidth - this.rect1[0].right -127)
+            let y = this.rect1[0].top - 123
+            this.rect1.shift()
             el.style.display = ''
             el.style.webkitTransform = `translate3d(0,${y}px,0)`
             el.style.transform = `translate3d(0,${y}px,0)`
@@ -285,6 +292,8 @@
         this.$nextTick(() => {
           el.style.webkitTransform = 'translate3d(0,0,0)'
           el.style.transform = 'translate3d(0,0,0)'
+          el.style.transform = `scale(.1,.1)`
+          el.style.webkitTransform = `scale(.1,.1)`
           let inner = el.getElementsByClassName('inner-hook')[0]
           inner.style.webkitTransform = 'translate3d(0,0,0)'
           inner.style.transform = 'translate3d(0,0,0)'
@@ -396,14 +405,15 @@
   }
   .ball {
     position: fixed;
-    right: 127px;
-    top: 123px;
+    right: 35px;
+    top: 68px;
     z-index: 200;
     transition: all 0.4s ease
   }
   .inner {
-    width: 32px;
-    height: 20px;
+    width: 200px;/*32*/
+    height: 128px;/*20*/
+    opacity: .7;
     background: rgb(0, 160, 220);
     transition: all 0.4s linear
   }
