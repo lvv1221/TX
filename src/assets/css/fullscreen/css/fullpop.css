@@ -132,7 +132,7 @@
 	justify-content: space-around;
 	align-items: center;
 	flex-wrap: wrap;
-	align-content: space-around;  
+	align-content: space-around;
 }
 .singleword li{
 	width:200px;
@@ -143,17 +143,17 @@
 .singleword li:hover{
 	cursor:pointer;
 }
-@media screen and (max-width: 1024px) { 
-.singleword li,.singleword li.current{margin:0;} 
-} 
-@media screen and (min-width: 1025px) { 
-.singleword li,.singleword li.current {margin:0 3%;} 
+@media screen and (max-width: 1024px) {
+.singleword li,.singleword li.current{margin:0;}
 }
-@media screen and (min-width: 1366px) { 
-.singleword li,.singleword li.current {margin:0 5%;} 
+@media screen and (min-width: 1025px) {
+.singleword li,.singleword li.current {margin:0 3%;}
 }
-@media screen and (min-width: 1700px) { 
-.singleword li,.singleword li.current {margin:0 7%;} 
+@media screen and (min-width: 1366px) {
+.singleword li,.singleword li.current {margin:0 5%;}
+}
+@media screen and (min-width: 1700px) {
+.singleword li,.singleword li.current {margin:0 7%;}
 }
 .singleword li.singleorange{
 	background:#ffd19b;
@@ -267,7 +267,7 @@
 	display:block;
 	width:12px;
 	height:12px;
-	border-radius:6px;	
+	border-radius:6px;
 }
 .singlepage-noraml i{
 	background:#e5eef7;
@@ -277,7 +277,7 @@
 	background:#a6d6ff;
 }
 .singlepage-current i{
-	background:#51aeff;	
+	background:#51aeff;
 }
 .fullpop-reminders{
 	height:54px;
@@ -313,7 +313,7 @@
 	-webkit-margin-end: 0px;
 	-webkit-box-flex: 1.0;
 	padding:0;
-	margin:0;	
+	margin:0;
 }
 .prompts-line em{
 	display:block;
@@ -387,8 +387,8 @@
 	height:0px;
 	width:0px;
 	margin:0 0 0 170px;
-	border:10px solid #000; 
-	border-color:rgba(0,0,0, 0.75) rgba(0,0,0, 0) rgba(0,0,0, 0 )rgba(0,0,0, 0);
+	border:10px solid #000;
+	border-color:rgba(0,0,0, 0.75) rgba(0,0,0, 0) rgba(0,0,0, 0 ) rgba(0,0,0, 0);
 }
 .prompts-right button{
 	width:120px;

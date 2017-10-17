@@ -25,7 +25,7 @@
                 {'singleblue-current': item.index%4 === 1 && item.current},
                 {'singlered-current': item.index%4 === 2 && item.current},
                 {'singlegreen-current': item.index%4 === 3 && item.current}]"
-                @click="start(item.index)" v-if="item.show"><!--请注意桔色选中状态class名为singleorange-current-->
+                @click="start(item.index,$event)" v-if="item.show"><!--请注意桔色选中状态class名为singleorange-current-->
               <div class="serial-number">单词{{item.index+1}}</div>
               <div class="soundmark">[ i:zi ]{{item.word}}</div>
               <div class="transmit"><i :class="transmit"></i></div>
@@ -134,7 +134,7 @@
           }
         }
       },
-      start (index) {
+      start (index,event) {
         // 开始计时器
         if(this.wordNum === '') {
           this.$refs.timeTool.startTime()
@@ -240,6 +240,7 @@
         },2000)
       },
       drop (el) {
+        console.log(el)
         for (let i = 0; i < this.balls.length; i++) {
           let ball = this.balls[i]
           if (!ball.show) {
@@ -258,7 +259,7 @@
             /*if (ball.el.getBoundingClientRect().left !==0) {
               this.rect = ball.el.getBoundingClientRect()
             }*/
-            this.rect1.push(event.target.getBoundingClientRect())
+            this.rect1.push(ball.el.getBoundingClientRect())
             let x =- (window.innerWidth - this.rect1[0].right -127)
             let y = this.rect1[0].top - 123
             this.rect1.shift()
