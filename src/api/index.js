@@ -2,6 +2,7 @@ import axios from 'axios'
 
 // 引入其他services
 export * from './services/words'
+export * from './services/answerList'
 
 // 以下为axios全局设置
 // axios.defaults.withCredentials = true
@@ -19,22 +20,23 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use((response) => {
   // 对响应数据做些事
   const result = response.data
+ // console.log(JSON.stringify(result.data.message))
   if (!result) {
     return Promise.reject({message: '数据异常！'})
   }
-  if (result.retCode === 1) {
+  if (!result.data.message && result.status === 200) {
     // 成功
     return result.data
-  } else if (result.retCode === 0) {
+  } else if (result.data.message) {
     // 失败
-    return Promise.reject({message: result.errMsg})
-  } else if (result.retCode === -1) {
+    return Promise.reject({message: result.data.message})
+  } /*else if (result.status === -1) {
     // 未登录
     window.location.href = result.data
-  } else if (result.retCode === -2) {
+  } else if (result.status === -2) {
     // 效验错误
     return Promise.reject({message: result.errMsg})
-  }
+  }*/
   return Promise.reject({message: '未知状态！'})
 }, (error) => {
   // 请求错误时提示

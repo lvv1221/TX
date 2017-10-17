@@ -19,7 +19,7 @@
                 <th v-for="b in blank" style="border: none" v-if="item === rowNum"></th>
               </tr>
               <tr>
-                <td v-for="word in rowWord(item)"><span :class="{'red': word.correct<60?true:false}">{{word.word}}</span></td>
+                <td v-for="word in rowWord(item)"><span :class="{'red': word.correctRate<60?true:false}">{{word.word}}</span></td>
                 <td v-for="b in blank" style="border: none" v-if="item === rowNum"></td>
               </tr>
             </table>
@@ -35,13 +35,14 @@
 
 <script>
   import _ from 'lodash'
+  import {answerListService} from '@/api'
   export default {
     name: 'answerList',
     data () {
       return {
         words: [],
         costTime: '',
-        loading: false
+        loading: false,
       }
     },
     created () {
@@ -80,12 +81,43 @@
       init () {
         this.loading = true
        // let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd']
-        let word = [{word:'1abc', correct: 35.23},{word:'2dsc', correct: 66},{word:'3ssd', correct: 77},
+        /*let word = [{word:'1abc', correct: 35.23},{word:'2dsc', correct: 66},{word:'3ssd', correct: 77},
                          {word:'4abc', correct: 35.23},{word:'5dsc', correct: 66},{word:'6ssd', correct: 77},
                          {word:'7abc', correct: 35.23},{word:'8dsc', correct: 66},{word:'9ssd', correct: 77},
                          {word:'10ssd', correct: 35.23},{word:'11ssd', correct: 66},{word:'12ssd', correct: 77},
-                         {word:'14ssd', correct: 35.23},{word:'15ssd', correct: 66}]
-        let storeWords = _.cloneDeep(this.$store.state.readWords)
+                         {word:'14ssd', correct: 35.23},{word:'15ssd', correct: 66}]*/
+
+        answerListService.getJ0Token('2000000030000014198').then(data => {
+          let authToken = data
+          answerListService.getAnswerList({
+            uuid:"2000000030000014198",
+            authToken:authToken,
+            fileId:"408065847907586048"
+          }).then(data => {
+            let result = data.result
+           // console.log(JSON.stringify(data.result[0]))
+           // let storeWords = _.cloneDeep(this.$store.state.readWords)
+            let storeWords = [{index: 1, word: 'Chinese'},{index: 2, word: 'where'},{index: 3, word: 'not'},{index: 4, word: 'about'},{index: 5, word: 'Ms'},
+                                        {index: 6, word: 'America'},{index: 7, word: 'not'},{index: 8, word: 'England'},{index: 9, word: 'hi'},{index: 10, word: 'American'},
+                                        {index: 11, word: 'our'},{index: 12, word: 'grade'},{index: 13, word: 'book'},{index: 14, word: 'apple'}]
+            /*for (let r of result) {
+              console.log(r.rightAnswer)
+            }*/
+            for (let sw of storeWords) {
+              for (let r of result) {
+                if (r.rightAnswer === sw.word) {
+                  this.$set(sw,'correctRate',r.correctRate)
+                }
+              }
+            }
+            this.words = storeWords
+            this.loading = false
+            /*this.$set(data.result[0],'index',1)
+            console.log(JSON.stringify(data.result[0]))*/
+          })
+        })
+
+        /*let storeWords = _.cloneDeep(this.$store.state.readWords)
         for (let sw of storeWords) {
           for (let w of word) {
             if (w.word === sw.word) {
@@ -96,7 +128,7 @@
         this.words = storeWords
           setTimeout(() => {
             this.loading = false
-          },1000)
+          },1000) */
       },
       goDetails () {
         this.$router.push({name: 'answerDetails'})
@@ -110,7 +142,7 @@
     position: absolute;
     -webkit-box-orient:vertical;
     left: 104px;
-    top: 178px;
+    top: 179px;
     z-index: 1000;
     width: 1682.25px;/*1270.25px86%*/
     height: 669px;/*669px70.5%*/
@@ -121,7 +153,7 @@
   }
   @media only screen and (max-width: 1500px) {
     .loading-mask{
-      width: 1270.25px;
+      width: 1260.25px;
     }
   }
   @media only screen and (max-width: 1300px) {

@@ -1,19 +1,21 @@
 <template>
   <div>
   <div class="fullpop-prompts">
-    <div class="prompts-left clearfix">
+    <div class="prompts-left clearfix" style="width:960px">
       <div class="prompts-dcm fl">单词5</div>
-      <div class="prompts-progressbar fl"><p style="width:50%;"></p></div>
-      <div class="prompts-yzd fl">已作答<span class="red">27人</span></div>
+      <div class="prompts-progressbar fl" style="width: 780px;"><p :style="processStyle"></p></div>
+      <div class="prompts-yzd fl">已作答<span class="red">{{students.yStudents.length}}人</span></div>
     </div>
     <div class="prompts-line"><em></em></div>
     <div class="prompts-right">
       <button class="btn-gray" @click="showList">未作答名单</button>
-      <div class="prompts-bubble" v-if="nameList">
+      <div class="prompts-bubble" v-if="isShowNameList">
         <div class="prompts-bubblecon">
           <div class="prompts-bubblescroll">
-            <div class="tc mb-5"><strong>未作答名单（23）</strong></div>
-            <div class="clearfix"><span><a href="#">胡宇于飞</a></span><span>胡宇于飞</span><span>胡宇于飞</span><span>王希</span><span>胡宇飞</span><span>胡宇飞</span><span>王希</span><span>胡宇飞</span><span>胡宇飞</span><span>王希</span><span>胡宇飞</span><span>胡宇飞</span><span>王希</span><span>胡宇飞</span><span>王希</span><span>胡宇飞</span><span>王希</span></div>
+            <div class="tc mb-5"><strong>未作答名单（{{students.nStudents.length}}）</strong></div>
+            <div class="clearfix">
+              <span v-for="stu in students.nStudents"><a href="#">{{stu.name}}</a></span>
+            </div>
           </div>
         </div>
         <div class="prompts-bubblearrow"></div>
@@ -25,21 +27,41 @@
 </template>
 
 <script>
+
   export default {
     name: 'anspro',
     data () {
       return {
-//        endDic: false
-        nameList: false
+        isShowNameList: false,
+        processStyle:{
+          width:""
+        },
+        students:{
+          yStudents:[],
+          nStudents:[],
+          aStudents:[]
+        }
       }
+    },
+    created(){
+      let self = this;
+      let aStudents =[{name:"测试名1",isWrite:false},{name:"测试名2",isWrite:true},{name:"测试名3",isWrite:false},{name:"测试名4",isWrite:false}];
+      for(let i=0;i<aStudents.length;i++){
+        if(aStudents[i].isWrite){
+          self.students.yStudents.push(aStudents[i]);
+        }else {
+          self.students.nStudents.push(aStudents[i]);
+        }
+      }
+      self.students.aStudents = aStudents;
+      self.processStyle.width = self.students.yStudents.length/self.students.aStudents.length *100 + "%";
     },
     methods: {
       finishDic () {
-//        this.endDic = true
         this.$emit('finish')
       },
       showList () {
-        this.nameList = !this.nameList
+        this.isShowNameList = !this.isShowNameList
       }
     }
   }
