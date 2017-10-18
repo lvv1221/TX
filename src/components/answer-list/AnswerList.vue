@@ -1,8 +1,9 @@
 <template>
   <div class="wrap">
-    <div class="loading-mask" v-show="loading">
-      <img src="../../assets/img/loading.gif"  class ="loading-img" alt="加载中...">
-    </div>
+    <!--<div class="loading-mask" v-show="loading">
+      <img src="../../assets/img/loading.gif"  class ="loading-img" alt="加载中..." v-if="imgType === 1">
+      <img src="../../assets/img/tips2_big.png"  class ="loading-img" alt="没有数据" v-else-if="imgType === 2">
+    </div>-->
     <div class="fullpop-box">
       <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
       <div class="fullpop-content">
@@ -10,7 +11,14 @@
           <strong>听写单词答案</strong>
           <p class="fullpop-topys"><i class="icon iconfont">&#xe650;</i>共用时&nbsp;<b>{{costTime}}</b></p>
         </div>
-        <div class="singlebox pa30">
+        <div class="singlebox pa30 err" v-if="loading">
+          <img src="../../assets/img/loading.gif"   alt="加载中..." v-if="imgType === 1">
+          <img src="../../assets/img/tips2_big.png"   alt="没有数据" v-else-if="imgType === -1">
+          <img src="../../assets/img/tips1_big.png"  alt="服务异常" v-else-if="imgType === -2">
+          <img src="../../assets/img/tips3_big.png"   alt="网络异常" v-else-if="imgType === -3">
+        </div>
+
+        <div class="singlebox pa30" v-if="!loading">
           <div class="single-refresh"><button class="btn-empty" @click="init()"><i class="icon iconfont">&#xe645;</i></button></div>
           <div class="pa10" v-for="item in rowNum">
             <table class="singletable">
@@ -43,6 +51,7 @@
         words: [],
         costTime: '',
         loading: false,
+        imgType: '1'
       }
     },
     created () {
@@ -80,6 +89,7 @@
       },
       init () {
         this.loading = true
+        this.imgType = 1
        // let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd']
         /*let word = [{word:'1abc', correct: 35.23},{word:'2dsc', correct: 66},{word:'3ssd', correct: 77},
                          {word:'4abc', correct: 35.23},{word:'5dsc', correct: 66},{word:'6ssd', correct: 77},
@@ -114,6 +124,12 @@
             this.loading = false
             /*this.$set(data.result[0],'index',1)
             console.log(JSON.stringify(data.result[0]))*/
+          }).catch(err => {
+            if(err.code === -1) {
+              this.imgType = -1
+            } else if (err.code === -2) {
+              this.imgType = -2
+            }
           })
         })
 
@@ -145,7 +161,7 @@
     top: 179px;
     z-index: 1000;
     width: 1682.25px;/*1270.25px86%*/
-    height: 669px;/*669px70.5%*/
+    height: 70.5%;/*669px70.5%*/
     /*line-height: 70.5%;*/
     background-color: hsla(0,0%,100%,.8);
     transition: opacity .3s;
@@ -167,5 +183,9 @@
   .loading-img{
     position: relative;
     top: 30%;
+  }
+  .err {
+    text-align: center;
+    padding-top: 25%
   }
 </style>

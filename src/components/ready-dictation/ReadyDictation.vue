@@ -240,7 +240,6 @@
         },2000)
       },
       drop (el) {
-        console.log(el)
         for (let i = 0; i < this.balls.length; i++) {
           let ball = this.balls[i]
           if (!ball.show) {
@@ -406,7 +405,7 @@
   }
   .ball {
     position: fixed;
-    right: 35px;
+    right: 62px;
     top: 68px;
     z-index: 200;
     transition: all 0.4s ease

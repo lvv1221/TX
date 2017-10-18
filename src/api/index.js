@@ -29,7 +29,7 @@ axios.interceptors.response.use((response) => {
     return result.data
   } else if (result.data.message) {
     // 失败
-    return Promise.reject({message: result.data.message})
+    return Promise.reject({message: result.data.message,code:-1})
   } /*else if (result.status === -1) {
     // 未登录
     window.location.href = result.data
@@ -37,7 +37,7 @@ axios.interceptors.response.use((response) => {
     // 效验错误
     return Promise.reject({message: result.errMsg})
   }*/
-  return Promise.reject({message: '未知状态！'})
+  return Promise.reject({message: '服务异常！',code: -2})
 }, (error) => {
   // 请求错误时提示
   return Promise.reject(error)
