@@ -29,6 +29,7 @@
               <div class="serial-number">单词{{item.index+1}}</div>
               <div class="soundmark">[ i:zi ]{{item.word}}</div>
               <div class="transmit"><i :class="transmit"></i></div>
+              <audio  :id="item.index"></audio>
             </li>
             <li v-for="item in emptyLi"></li>
           </ul>
@@ -179,7 +180,7 @@
           if(w.index === index)
             w.current=true
         }
-        this.play()
+        this.play(index)
         this.wordNum = index
       },
       // 获取当前页面显示单词数
@@ -229,15 +230,38 @@
         }
         this.i++*/
       },
-      play () {
+      play (index) {
         if (!this.startDic) {
           this.startDic = true
         }
-        let timeout
+        let au = document.getElementById(index)
+        au = new Audio
+        au.id = index
+        au.onended = this.ended
+        if (au.id >2) {
+          au.src = '../../static/cool.mp3'
+        } else {
+          au.src = '../../static/because.mp3'
+        }
+        console.log(au)
+        au.play()
+        /*let au = this.$refs.audios[index]
+
+        au.play()*/
+        /*this.$refs.audios[index].onended = function () {
+          console.log(1111)
+         let  _this = this
+          _this.transmit = 'transmit-normal'
+        }*/
+/*        let timeout
         clearTimeout(timeout)
         timeout = setTimeout(() => {
           this.transmit = 'transmit-normal'
-        },2000)
+        },2000)*/
+      },
+      ended () {
+        this.transmit = 'transmit-normal'
+        console.log('end')
       },
       drop (el) {
         for (let i = 0; i < this.balls.length; i++) {
