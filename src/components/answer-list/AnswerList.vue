@@ -5,7 +5,7 @@
       <img src="../../assets/img/tips2_big.png"  class ="loading-img" alt="没有数据" v-else-if="imgType === 2">
     </div>-->
     <div class="fullpop-box">
-      <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
+      <div class="fullpop-tab clearfix"><em>{{this.$store.state.title}}</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
       <div class="fullpop-content">
         <div class="fullpop-top">
           <strong>听写单词答案</strong>
@@ -27,7 +27,7 @@
                 <th v-for="b in blank" style="border: none" v-if="item === rowNum"></th>
               </tr>
               <tr>
-                <td v-for="word in rowWord(item)"><span :class="{'red': word.correctRate<60?true:false}">{{word.word}}</span></td>
+                <td v-for="word in rowWord(item)"><span :class="{'red': word.correctRate<60?true:false}">{{word.name}}</span></td>
                 <td v-for="b in blank" style="border: none" v-if="item === rowNum"></td>
               </tr>
             </table>
@@ -100,26 +100,28 @@
         answerListService.getJ0Token('2000000030000014198').then(data => {
           let authToken = data
           answerListService.getAnswerList({
-            uuid:"2000000030000014198",
+            uuid:this.$store.state.uuid,
             authToken:authToken,
             fileId:"408065847907586048"
           }).then(data => {
             let result = data.result
-           // console.log(JSON.stringify(data.result[0]))
-           // let storeWords = _.cloneDeep(this.$store.state.readWords)
-            let storeWords = [{index: 1, word: 'Chinese'},{index: 2, word: 'where'},{index: 3, word: 'not'},{index: 4, word: 'about'},{index: 5, word: 'Ms'},
+            // console.log(JSON.stringify(data.result[0]))
+            let storeWords = _.cloneDeep(this.$store.state.readWords)
+
+            /*let storeWords = [{index: 1, word: 'Chinese'},{index: 2, word: 'where'},{index: 3, word: 'not'},{index: 4, word: 'about'},{index: 5, word: 'Ms'},
                                         {index: 6, word: 'America'},{index: 7, word: 'not'},{index: 8, word: 'England'},{index: 9, word: 'hi'},{index: 10, word: 'American'},
-                                        {index: 11, word: 'our'},{index: 12, word: 'grade'},{index: 13, word: 'book'},{index: 14, word: 'apple'}]
+                                        {index: 11, word: 'our'},{index: 12, word: 'grade'},{index: 13, word: 'book'},{index: 14, word: 'apple'}]*/
             /*for (let r of result) {
               console.log(r.rightAnswer)
             }*/
             for (let sw of storeWords) {
               for (let r of result) {
-                if (r.rightAnswer === sw.word) {
+                if (r.rightAnswer === sw.name) {
                   this.$set(sw,'correctRate',r.correctRate)
                 }
               }
             }
+           // console.log(JSON.stringify(storeWords))
             this.words = storeWords
             this.loading = false
             /*this.$set(data.result[0],'index',1)

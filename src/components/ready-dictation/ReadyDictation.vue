@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="fullpop-box">
-      <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
+      <div class="fullpop-tab clearfix"><em>{{this.$store.state.title}}</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
       <div class="fullpop-content">
         <div class="fullpop-top">
           <timetool ref="timeTool"></timetool>
@@ -18,7 +18,7 @@
           </div>
 
         </div>
-        <div class="singlebox" draggable="true" @dragstart="dragStart($event)" @dragend="dragOver($event)">
+        <div class="singlebox animated"  :class="{bounceInLeft:aLeft, bounceInRight:aRight}" @touchstart="touchstart($event)" @touchend="touchend($event)" @animationend="animationend">
           <ul class="singleword">
             <li v-for="item in words" :key="item.index" :class="[class1[item.index%4],
                 {'singleorange-current': item.index%4 === 0 && item.current},
@@ -27,7 +27,7 @@
                 {'singlegreen-current': item.index%4 === 3 && item.current}]"
                 @click="start(item.index,$event)" v-if="item.show"><!--请注意桔色选中状态class名为singleorange-current-->
               <div class="serial-number">单词{{item.index+1}}</div>
-              <div class="soundmark">[ i:zi ]{{item.word}}</div>
+              <div class="soundmark">{{item.phonogram}}</div>
               <div class="transmit"><i :class="transmit"></i></div>
               <audio  :id="item.index"></audio>
             </li>
@@ -53,6 +53,8 @@
   import basket from '../word-basket/WordBasket.vue'
   import timetool from './TimeTool.vue'
   import _ from 'lodash'
+  import axios from 'axios'
+
   export default {
     name:'ready-diraction',
     data () {
@@ -86,16 +88,36 @@
         pageCount:'',
         fyFlag: false,
         pageNum: 1,
-        dragX: '',
+       // dragX: '',
+        pageX: '',
+        aLeft: false,
+        aRight: false,
         costTime: ''
       }
     },
     created () {
-      let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd','16swe']
+      let title = 'Lesson 2  A Dangerous Job'
+      let uuid = '2000000030000014198'
+      this.$store.dispatch('setUuid', uuid)
+      this.$store.dispatch('setTitle', title)
+      axios.get('/api/words').then(res => {
+       // console.log(JSON.stringify(res))
+        let word = res
+        this.pageCount = Math.ceil(word.length/6)
+        for (let i=0;i<word.length;i++) {
+          this.$set(word[i], 'index', i)
+          this.$set(word[i], 'current', false)
+          this.$set(word[i], 'show', i<6?true:false)
+         // this.words.push({index:i, word:word[i], current:false, show:i<6?true:false})
+        }
+        this.words = word
+       // console.log(JSON.stringify(this.words[0]))
+      })
+      /*let word = ['1abc','2dsc','3ssd','4abc','5dsc','6ssd','7abc','8dsc','9ssd','10ssd','11ssd','12ssd','13ssd','14ssd','15ssd','16swe']
       this.pageCount = Math.ceil(word.length/6)
       for (let i=0;i<word.length;i++) {
         this.words.push({index:i, word:word[i], current:false, show:i<6?true:false})
-      }
+      }*/
       /*for(let i = 0; i<this.words.length; i++) {
         this.curStatu.push(false)
         if (i<6) {
@@ -119,6 +141,7 @@
       }
     },
     methods: {
+      /* 拖动翻页，因需求不符，暂已弃用
       dragStart (event) {
         this.dragX = event.clientX
       },
@@ -132,6 +155,27 @@
         else if (length < -20) {
           if (this.pageNum > 1) {
             this.page(this.pageNum-1)
+          }
+        }
+      },*/
+      animationend  () {
+        this.aRight = false
+        this.aLeft = false
+      },
+      touchstart (event) {
+        this.pageX = event.touches[0].pageX
+      },
+      touchend (event) {
+        let length = this.pageX - event.changedTouches[0].pageX
+        if (length > 20) {
+          if (this.pageNum < this.pageCount) {
+            this.page(this.pageNum+1)
+            this.aRight = true
+          }
+        } else if (length < -20) {
+          if (this.pageNum > 1) {
+            this.page(this.pageNum-1)
+            this.aLeft = true
           }
         }
       },
@@ -238,16 +282,19 @@
         au = new Audio
         au.id = index
         au.onended = this.ended
-        if (au.id >2) {
+        for (let w of this.words) {
+          if (w.index === index) {
+            au.src = w.pronPath
+          }
+        }
+        console.log(au.src)
+       /* if (au.id >2) {
           au.src = '../../static/cool.mp3'
         } else {
           au.src = '../../static/because.mp3'
-        }
-        console.log(au)
+        }*/
+        // console.log(au)
         au.play()
-        /*let au = this.$refs.audios[index]
-
-        au.play()*/
         /*this.$refs.audios[index].onended = function () {
           console.log(1111)
          let  _this = this
@@ -261,7 +308,7 @@
       },
       ended () {
         this.transmit = 'transmit-normal'
-        console.log('end')
+       // console.log('end')
       },
       drop (el) {
         for (let i = 0; i < this.balls.length; i++) {
@@ -351,7 +398,8 @@
           this.pageNum = page
         }
       },
-      page1 (page) {
+      // 原分页方法，逻辑复杂，已弃用，如项目需求变更，可能重新启用
+      /*page1 (page) {
         if (page !== this.pageNum) {
           let num = page - this.pageNum
           // 下一页
@@ -403,7 +451,7 @@
 
           this.pageNum = page
         }
-      },
+      },*/
       toAnswer () {
         this.costTime = this.$refs.timeTool.stopTime()
         this.$store.dispatch('setTime', this.costTime)

@@ -1,0 +1,162 @@
+[
+  {
+    "phonogram": " [ˈles(ə)n]",
+    "name": "lesson",
+    "enwordId": "274229249047531520",
+    "pronPath": "../../static/lesson.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/L/lesson.mp3",
+    "meaning": "n.功课，课；课程"
+  },
+  {
+    "phonogram": " [aʊr]",
+    "name": "hour",
+    "enwordId": "274229249131417600",
+    "pronPath": "../../static/hour.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/H/hour.mp3",
+    "meaning": "n.小时；时间，时刻"
+  },
+  {
+    "phonogram": "['mʌndi]",
+    "name": "Monday",
+    "enwordId": "274229242982567936",
+    "pronPath": "../../static/Monday.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/M/Monday.mp3",
+    "meaning": "n. 星期一"
+  },
+  {
+    "phonogram": "[fə(r)  ʃʊər;",
+    "name": "for sure",
+    "enwordId": "274229243230031872",
+    "pronPath": "../../static/for sure.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/F/for sure.mp3",
+    "meaning": "无疑，肯定"
+  },
+  {
+    "phonogram": " [ˈsʌndeɪ]",
+    "name": "Sunday",
+    "enwordId": "274229244442185728",
+    "pronPath": "../../static/Sunday.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/S/Sunday.mp3",
+    "meaning": "n.星期日"
+  },
+  {
+    "phonogram": "frɒm",
+    "name": "from",
+    "enwordId": "274229246782607360",
+    "pronPath": "../../static/from.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/F/from.mp3",
+    "meaning": "[表示过去、一段时期、距离、动作等的起点；表示思想、行动等的根源、来源或起源]\r\n从，自，由；从…开始："
+  },
+  {
+    "phonogram": "[pi:]   [em]",
+    "name": "P.M.",
+    "enwordId": "274229245666922496",
+    "pronPath": "../../static/P.M..mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/P/P.M..mp3",
+    "meaning": "下午；午后"
+  },
+  {
+    "phonogram": " [ˈtuzˌdeɪ]",
+    "name": "Tuesday",
+    "enwordId": "274229244194721792",
+    "pronPath": "../../static/Tuesday.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/T/Tuesday.mp3",
+    "meaning": "n. 星期二"
+  },
+  {
+    "phonogram": " [fri]",
+    "name": "free",
+    "enwordId": "274229244035338240",
+    "pronPath": "../../static/free.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/F/free.mp3",
+    "meaning": "adj. 免费的；自由的，不受约束的\r\nv. 使自由，解放\r\nadv. 自由地；免费"
+  },
+  {
+    "phonogram": " [ˈsʌbˌdʒekt]",
+    "name": "subject",
+    "enwordId": "274229239526461440",
+    "pronPath": "../../static/subject.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/S/subject.mp3",
+    "meaning": "n.科目；主题；受试者\r\nv.使隶属，使受到"
+  },
+  {
+    "phonogram": " [bɪkəz]",
+    "name": "because",
+    "enwordId": "274229242902876160",
+    "pronPath": "../../static/because.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/B/because.mp3",
+    "meaning": "conj. 因为"
+  },
+  {
+    "phonogram": " [dʒiˈɑɡrəfi]",
+    "name": "geography",
+    "enwordId": "274229241967546368",
+    "pronPath": "../../static/geography.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/G/geography.mp3",
+    "meaning": "n.地理(学)"
+  },
+  {
+    "phonogram": "[waɪ]",
+    "name": "why",
+    "enwordId": "274229242131124224",
+    "pronPath": "../../static/why.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/W/why.mp3",
+    "meaning": "为什么"
+  },
+  {
+    "phonogram": "[mæθ]",
+    "name": "math",
+    "enwordId": "274229240973496320",
+    "pronPath": "../../static/math.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/M/math.mp3",
+    "meaning": "数学"
+  },
+  {
+    "phonogram": " [kul]",
+    "name": "cool",
+    "enwordId": "274229244115030016",
+    "pronPath": "../../static/cool.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/C/cool.mp3",
+    "meaning": "adj.凉爽的，冷静的，沉着的\r\nv.(使)冷却，(使)镇静"
+  },
+  {
+    "phonogram": " [ˌtʃaɪˈniz]",
+    "name": "Chinese",
+    "enwordId": "274229241879465984",
+    "pronPath": "../../static/Chinese.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/C/Chinese.mp3",
+    "meaning": "adj.中国的 \r\nn.中国人"
+  },
+  {
+    "phonogram": " [ˈwenzˌdeɪ]",
+    "name": "Wednesday",
+    "enwordId": "274229244278607872",
+    "pronPath": "../../static/Wednesday.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/W/Wednesday.mp3",
+    "meaning": "n. 星期三"
+  },
+  {
+    "phonogram": " [ˈθɜr(r)zdeɪ]",
+    "name": "Thursday",
+    "enwordId": "274229244358299648",
+    "pronPath": "../../static/Thursday.mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/T/Thursday.mp3",
+    "meaning": "n. 星期四"
+  },
+  {
+    "phonogram": " [ˈmɪsɪz]",
+    "name": "Mrs.",
+    "enwordId": "274229248883953664",
+    "pronPath": "../../static/Mrs..mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/M/Mrs..mp3",
+    "meaning": "n. 夫人；太太"
+  },
+  {
+    "phonogram": "[ˌpi'i]",
+    "name": "P.E.",
+    "enwordId": "274229239698427904",
+    "pronPath": "../../static/P.E..mp3",
+    "pronUrl": "http://test.j0.cn/upload/words//lib/P/P.E..mp3",
+    "meaning": "体育课"
+  }
+]

@@ -3,7 +3,7 @@
     <div class="wrap">
       <div class="fullpop-box">
         <!--<div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>-->
-        <div class="fullpop-tab clearfix"><em>Lesson 2  A Dangerous Job</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
+        <div class="fullpop-tab clearfix"><em>{{this.$store.state.title}}</em><p class="fr"><a href="#"><i class="icon iconfont">&#xe652;</i></a><a href="#"><i class="icon iconfont">&#xe648;</i></a></p></div>
         <div class="fullpop-content">
           <div class="fullpop-top">
             <strong>已报单词篮</strong>
@@ -17,7 +17,7 @@
                 {'singlegreen-current': item.index%4 === 3 && item.current}]"
                   v-if="item.show"  ><!--请注意桔色选中状态class名为singleorange-current-->
                 <div class="serial-number">单词{{item.index+1}}</div>
-                <div class="soundmark">[ i:zi ]{{item.word}}</div>
+                <div class="soundmark">{{item.phonogram}}</div>
               </li>
               <li v-for="item in emptyLi"></li>
             </ul>

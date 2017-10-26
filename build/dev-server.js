@@ -23,6 +23,17 @@ var proxyTable = config.dev.proxyTable
 var app = express()
 var compiler = webpack(webpackConfig)
 
+var appData = require('../meta.json')
+var apiRoutes = express.Router()
+apiRoutes.get('/words',function (req,res) {
+  res.json({
+    data:appData,
+    status: 200
+  })
+})
+app.use('/api',apiRoutes)
+
+
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   quiet: true
